@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme, THEMES } from '../context/ThemeContext';
 import ThemeSwitcher from './ThemeSwitcher';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
+  const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -150,71 +152,133 @@ export default function Navbar() {
         right: 0,
         bottom: 0,
         background: 'var(--bg-surface)',
-        padding: '1.5rem',
-        gap: '0.35rem',
         animation: 'slideDown 0.25s ease forwards',
-        overflowY: 'auto',
+        overflow: 'hidden',
       }}>
-        <Link to="/" onClick={() => setMenuOpen(false)} style={{
-          padding: '0.75rem 1rem',
-          fontSize: '1rem',
-          display: 'block',
-          borderBottom: '1px solid var(--border-color)',
-          color: isActive('/') ? 'var(--accent)' : 'var(--text-primary)',
-          textDecoration: 'none',
-          fontWeight: isActive('/') ? 600 : 400,
-        }}>
-          Home
-        </Link>
-        <div style={{ padding: '0.75rem 0', borderBottom: '1px solid var(--border-color)' }}>
-          <ThemeSwitcher />
-        </div>
-        {user ? (
-          <>
-            <Link to="/create" onClick={() => setMenuOpen(false)} style={{
-              padding: '0.75rem 1rem',
-              fontSize: '1rem',
-              display: 'block',
-              color: 'var(--text-primary)',
-              textDecoration: 'none',
-              borderBottom: '1px solid var(--border-color)',
-            }}>
-              Write
-            </Link>
-            <Link to="/dashboard" onClick={() => setMenuOpen(false)} style={{
-              padding: '0.75rem 1rem',
-              fontSize: '1rem',
-              display: 'block',
-              color: 'var(--text-primary)',
-              textDecoration: 'none',
-              borderBottom: '1px solid var(--border-color)',
-            }}>
-              Dashboard
-            </Link>
-            <button onClick={() => { handleLogout(); setMenuOpen(false); }} style={{
-              padding: '0.75rem 1rem',
-              fontSize: '1rem',
-              background: 'none',
-              border: 'none',
-              color: 'var(--danger)',
-              textAlign: 'left',
-              fontFamily: 'var(--font-secondary)',
-              cursor: 'pointer',
-              display: 'block',
-              width: '100%',
-            }}>
-              Logout
-            </button>
-          </>
-        ) : (
-          <Link to="/login" onClick={() => setMenuOpen(false)} className="btn btn-primary" style={{
-            margin: '0.75rem 1rem',
-            display: 'flex',
-            justifyContent: 'center',
+        <div style={{ flex: 1, overflowY: 'auto', padding: '1rem 1.5rem 2rem' }}>
+          <Link to="/" onClick={() => setMenuOpen(false)} style={{
+            padding: '0.85rem 1rem',
+            fontSize: '1.05rem',
+            display: 'block',
+            borderRadius: 'var(--radius-md)',
+            background: isActive('/') ? 'hsla(var(--hsl-accent), 0.1)' : 'transparent',
+            color: isActive('/') ? 'var(--accent)' : 'var(--text-primary)',
+            textDecoration: 'none',
+            fontWeight: isActive('/') ? 600 : 500,
+            marginBottom: '0.25rem',
           }}>
-            Sign In
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '0.6rem', verticalAlign: 'middle' }}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Home
           </Link>
-        )}
+
+          <div style={{ margin: '0.75rem 1rem 0.5rem' }}>
+            <p style={{ fontSize: '0.7rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--text-muted)' }}>Theme</p>
+          </div>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '0.4rem',
+            padding: '0 1rem',
+          }}>
+            {THEMES.map(t => (
+              <button
+                key={t.id}
+                onClick={() => { setTheme(t.id); }}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '0.2rem',
+                  padding: '0.5rem 0.3rem',
+                  borderRadius: 'var(--radius-md)',
+                  border: theme === t.id ? '1px solid var(--accent)' : '1px solid var(--border-color)',
+                  background: theme === t.id ? 'hsla(var(--hsl-accent), 0.08)' : 'var(--bg-card)',
+                  cursor: 'pointer',
+                  fontFamily: 'var(--font-secondary)',
+                  transition: 'var(--transition)',
+                }}
+              >
+                <span style={{ fontSize: '1.1rem', lineHeight: 1 }}>{t.icon}</span>
+                <span style={{
+                  fontSize: '0.6rem',
+                  fontWeight: 600,
+                  color: theme === t.id ? 'var(--accent)' : 'var(--text-muted)',
+                  whiteSpace: 'nowrap',
+                }}>
+                  {t.name}
+                </span>
+              </button>
+            ))}
+          </div>
+
+          {user ? (
+            <div style={{ marginTop: '1.5rem' }}>
+              <div style={{ margin: '0 1rem 0.5rem' }}>
+                <p style={{ fontSize: '0.7rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--text-muted)' }}>Account</p>
+              </div>
+              <Link to="/create" onClick={() => setMenuOpen(false)} style={{
+                padding: '0.85rem 1rem',
+                fontSize: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.6rem',
+                color: 'var(--text-primary)',
+                textDecoration: 'none',
+                borderRadius: 'var(--radius-md)',
+                margin: '0 1rem',
+              }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                Write
+              </Link>
+              <Link to="/dashboard" onClick={() => setMenuOpen(false)} style={{
+                padding: '0.85rem 1rem',
+                fontSize: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.6rem',
+                color: 'var(--text-primary)',
+                textDecoration: 'none',
+                borderRadius: 'var(--radius-md)',
+                margin: '0 1rem',
+              }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Dashboard
+              </Link>
+              <button onClick={() => { handleLogout(); setMenuOpen(false); }} style={{
+                padding: '0.85rem 1rem',
+                fontSize: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.6rem',
+                background: 'none',
+                border: 'none',
+                color: 'var(--danger)',
+                textAlign: 'left',
+                fontFamily: 'var(--font-secondary)',
+                cursor: 'pointer',
+                width: 'calc(100% - 2rem)',
+                margin: '0 1rem',
+                borderRadius: 'var(--radius-md)',
+              }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Logout
+              </button>
+            </div>
+          ) : (
+            <div style={{ marginTop: '1.5rem', padding: '0 1rem' }}>
+              <Link to="/login" onClick={() => setMenuOpen(false)} className="btn btn-primary" style={{
+                display: 'flex',
+                justifyContent: 'center',
+                width: '100%',
+                minHeight: '48px',
+                fontSize: '1rem',
+              }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                Sign In
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
 
       <style>{`
