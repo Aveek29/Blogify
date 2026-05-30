@@ -1,231 +1,101 @@
-# 🚀 DevBlog Hub — Full AWS Deployment Guide
-
-Follow these steps exactly to deploy the full stack.
+# 🚀 Deploy to Vercel + Render
 
 ---
 
-## 🧱 PHASE 1 — PREPARE BACKEND (LOCAL CHECK)
+## 📦 Backend → Render
 
+### Step 1: Push to GitHub
 ```bash
-cd backend
-npm install
-npm start
+git init
+git add .
+git commit -m "ready"
+git remote add origin https://github.com/Aveek29/Blogify.git
+git push -u origin main
 ```
 
-Verify these endpoints work locally:
-- `http://localhost:5000/api/health` → `{ "status": "ok" }`
-- `http://localhost:5000/api/posts` → `{ "posts": [] }`
-- `POST http://localhost:5000/api/auth/register` → creates user
-- `POST http://localhost:5000/api/chat` → AI replies
+### Step 2: Create Render Web Service
+1. Go to [render.com](https://render.com) → Sign up with GitHub
+2. **Dashboard → New + → Web Service**
+3. Connect your `Blogify` repo
+4. Configure:
+
+| Setting | Value |
+|---------|-------|
+| Name | `devblog-backend` |
+| Root Directory | `backend/` |
+| Runtime | Node |
+| Build Command | `npm install` |
+| Start Command | `node server.js` |
+| Plan | Free |
+
+5. Add **Environment Variables** (click "Advanced" → "Add Environment Variable"):
+
+| Key | Value |
+|-----|-------|
+| `PORT` | `5000` |
+| `MONGODB_URI` | `mongodb+srv://...` (your Atlas string) |
+| `JWT_SECRET` | any random string |
+| `GROQ_API_KEY` | from console.groq.com |
+
+6. Click **Create Web Service**
+
+Render will build and deploy. Wait 2-3 minutes, then copy the URL:  
+**`https://devblog-backend.onrender.com`**
+
+### Step 3: Test Backend
+Open `https://devblog-backend.onrender.com/api/health` → should show `{ "status": "ok" }`
+
+### Step 4: MongoDB Atlas
+Go to Atlas → Network Access → Add IP → `0.0.0.0/0` (allows Render to connect)
 
 ---
 
-## ☁️ PHASE 2 — CREATE EC2 SERVER
+## 🎨 Frontend → Vercel
 
-### Step 2: Launch EC2
-1. **AWS Console → EC2 → Launch Instance**
-2. Name: `devblog-backend`
-3. **AMI**: Ubuntu 22.04 LTS (free tier)
-4. **Instance type**: `t2.micro` (free tier)
-5. **Key pair**: Create or select existing (download `.pem`)
+### Step 1: Create Vercel Project
+1. Go to [vercel.com](https://vercel.com) → Sign up with GitHub
+2. **Add New → Project**
+3. Import your `Blogify` repo
+4. Configure:
 
-### Step 3: Security Group (VERY IMPORTANT)
-Add these inbound rules:
+| Setting | Value |
+|---------|-------|
+| Root Directory | `frontend/` |
+| Framework Preset | **Vite** |
+| Build Command | `npm run build` |
+| Output Directory | `dist` |
 
-| Type | Protocol | Port Range | Source |
-|------|----------|-----------|--------|
-| SSH | TCP | 22 | Your IP (`x.x.x.x/32`) |
-| HTTP | TCP | 80 | `0.0.0.0/0` |
-| HTTPS | TCP | 443 | `0.0.0.0/0` |
+5. **Environment Variables**:
 
-### Step 4: Connect to EC2
-```bash
-ssh -i your-key.pem ubuntu@YOUR_EC2_PUBLIC_IP
-```
+| Key | Value |
+|-----|-------|
+| `VITE_API_URL` | `https://devblog-backend.onrender.com` |
 
-### Step 5: Install Tools
-```bash
-sudo apt update && sudo apt upgrade -y
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt install -y nodejs git nginx
-node --version   # v20.x
-npm --version
-```
+6. Click **Deploy**
+
+### Step 2: Done
+Vercel gives you a URL: **`https://blogify.vercel.app`**
+
+Your SPA routing is handled automatically by the `vercel.json` rewrite rule.
 
 ---
 
-## 🧠 PHASE 3 — DEPLOY BACKEND ON EC2
-
-### Step 6: Clone & Install
-```bash
-git clone https://github.com/YOUR_USERNAME/devblog-hub.git
-cd devblog-hub/backend
-npm install
-```
-
-### Step 7: Create Backend `.env`
-```bash
-nano .env
-```
-
-Paste (fill with your real values):
-```env
-PORT=5000
-MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/devblog?retryWrites=true&w=majority
-JWT_SECRET=<generate-a-random-string>
-GROQ_API_KEY=gsk_your_groq_key
-```
-
-### Step 8: Test Backend
-```bash
-node server.js
-```
-
-Open `http://YOUR_EC2_IP:5000/api/posts` in your browser — you should see JSON.
-
-Press `Ctrl+C` to stop.
-
-### Step 9: Keep Backend Running with PM2
-```bash
-sudo npm install -g pm2
-pm2 start server.js --name devblog
-pm2 save
-sudo env PATH=$PATH:/usr/bin pm2 startup systemd -u ubuntu --hp /home/ubuntu
-```
-
-### Step 10: Setup Nginx Reverse Proxy
-```bash
-sudo cp deploy/nginx.conf /etc/nginx/sites-available/devblog
-sudo ln -s /etc/nginx/sites-available/devblog /etc/nginx/sites-enabled/
-sudo nginx -t
-sudo systemctl restart nginx
-```
-
-Now `http://YOUR_EC2_IP/api/posts` works without the `:5000` port.
-
----
-
-## 🔐 PHASE 4 — MONGODB ATLAS SETUP
-
-1. Go to **MongoDB Atlas → Network Access → Add IP Address**
-2. Add your EC2 instance's **public IP**
-   - Or use `0.0.0.0/0` (allows any IP — okay for dev, not for production)
-3. Ensure the connection string in `backend/.env` matches your database
-
----
-
-## 🎨 PHASE 5 — FRONTEND SETUP
-
-### Step 11: Install Frontend Dependencies
-```bash
-cd ~/devblog-hub/frontend
-npm install
-```
-
-### Step 12: Set API URL
-```bash
-nano .env
-```
-
-Set `VITE_API_URL` to your EC2 public IP:
-```env
-VITE_API_URL=http://YOUR_EC2_PUBLIC_IP
-```
-
-### Step 13: Test Frontend Locally
-```bash
-npm run dev
-```
-
-Open `http://localhost:3000` — everything should work against your EC2 backend.
-
----
-
-## ☁️ PHASE 6 — DEPLOY FRONTEND TO S3 + CLOUDFRONT
-
-### Step 14: Build Production Assets
-```bash
-npm run build
-```
-
-### Step 15: Upload to S3
-```bash
-# Install AWS CLI (if not already)
-sudo apt install -y awscli
-aws configure
-# Enter your AWS Access Key ID & Secret Access Key
-
-# Create bucket in AWS Console first, then:
-aws s3 sync dist/ s3://your-bucket-name/ --delete
-```
-
-### Step 16: Setup CloudFront
-1. **AWS Console → CloudFront → Create Distribution**
-2. **Origin**: Select your S3 bucket
-3. **Origin access**: Origin access control settings (recommended)
-4. **Viewer protocol**: Redirect HTTP to HTTPS
-5. **Default root object**: `index.html`
-6. **Custom error response**: Yes
-   - Error 403 → Response page: `/index.html` → 200
-   - Error 404 → Response page: `/index.html` → 200
-7. Click **Create**
-8. Apply the S3 bucket policy that CloudFront provides
-
----
-
-## 🔗 FINAL SYSTEM FLOW
+## 🔗 Final System Flow
 
 ```
-User's Browser
-     │
-     ▼
-CloudFront CDN (https://xxxxx.cloudfront.net)
-     │
-     ├── Static files (HTML, JS, CSS) → S3 bucket
-     │
-     └── API calls (/api/*) → EC2 Nginx → Node.js (port 5000)
-                                             │
-                                             ▼
-                                        MongoDB Atlas
+User → Vercel (blogify.vercel.app)
+              │
+              ▼
+        Render API (devblog-backend.onrender.com/api/*)
+              │
+              ▼
+        MongoDB Atlas
 ```
 
----
+## ⚡ 3 Things to Set
 
-## ⚡ 3 THINGS YOU MUST CHANGE
-
-| # | File | Variable | Your Value |
-|---|------|----------|-----------|
-| 1 | `frontend/.env` | `VITE_API_URL` | `http://YOUR_EC2_PUBLIC_IP` |
-| 2 | `backend/.env` | `MONGODB_URI` | Your Atlas connection string |
-| 3 | MongoDB Atlas | Network IP | Your EC2 public IP |
-
----
-
-## 📁 Project Structure
-
-```
-E:\Blogify\
-├── backend/
-│   ├── config/
-│   ├── middleware/
-│   ├── models/
-│   ├── routes/
-│   ├── uploads/
-│   ├── .env.example
-│   ├── package.json
-│   └── server.js
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   ├── .env
-│   ├── index.html
-│   ├── vite.config.js
-│   └── package.json
-├── deploy/
-│   ├── nginx.conf              # Copy to /etc/nginx/sites-available/
-│   ├── setup-ec2.sh            # First-time EC2 setup
-│   ├── deploy-backend.sh       # Push code updates to EC2
-│   └── deploy-frontend.sh      # Build + sync to S3
-├── DEPLOY.md
-└── README.md
-```
+| # | Where | Key | Value |
+|---|-------|-----|-------|
+| 1 | Render Dashboard | `MONGODB_URI` | Your Atlas connection string |
+| 2 | Render Dashboard | `JWT_SECRET` | Random secret |
+| 3 | Vercel Dashboard | `VITE_API_URL` | `https://your-app.onrender.com` |
