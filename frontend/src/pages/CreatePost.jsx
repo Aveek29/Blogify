@@ -87,8 +87,8 @@ export default function CreatePost() {
     <div className="page-wrapper">
       <div className="container" style={{ maxWidth: '800px' }}>
         <div className="page-header" style={{ textAlign: 'left', marginBottom: '2rem' }}>
-          <h1 className="page-title" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>
-            ✎ New Article
+          <h1 className="page-title" style={{ marginBottom: '0.5rem' }}>
+            New Article
           </h1>
           <p className="page-subtitle" style={{ fontSize: '0.95rem' }}>
             Share your knowledge with the dev community.
@@ -121,7 +121,7 @@ export default function CreatePost() {
             <label>Cover Image</label>
             <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
               <label className="btn btn-secondary" style={{ cursor: 'pointer', position: 'relative' }}>
-                {uploading ? 'Uploading...' : '📁 Upload File'}
+                {uploading ? 'Uploading...' : 'Upload File'}
                 <input
                   type="file"
                   accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
@@ -174,7 +174,7 @@ export default function CreatePost() {
                 className="btn btn-ghost btn-sm"
                 style={{ fontSize: '0.78rem' }}
               >
-                {preview ? '✎ Edit' : '👁 Preview'}
+                {preview ? 'Edit' : 'Preview'}
               </button>
             </div>
             {preview ? (
@@ -206,10 +206,10 @@ export default function CreatePost() {
           <button
             type="submit"
             disabled={submitting}
-            className="btn btn-primary btn-lg"
-            style={{ alignSelf: 'flex-start', marginTop: '0.5rem' }}
+            className="btn btn-primary btn-lg btn-full-mobile"
+            style={{ marginTop: '0.5rem' }}
           >
-            {submitting ? 'Publishing...' : '🚀 Publish Article'}
+            {submitting ? 'Publishing...' : 'Publish Article'}
           </button>
         </form>
       </div>

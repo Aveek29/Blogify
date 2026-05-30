@@ -74,7 +74,7 @@ export default function Navbar() {
           letterSpacing: '-0.03em',
           textDecoration: 'none',
         }}>
-          <span style={{ fontSize: '1.5rem', color: 'var(--accent)', WebkitTextFillColor: 'initial' }}>◇</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--accent)" style={{ flexShrink: 0 }}><polygon points="12,2 22,12 12,22 2,12"/></svg>
           DevBlog
         </Link>
 
@@ -207,13 +207,10 @@ export default function Navbar() {
             </button>
           </>
         ) : (
-          <Link to="/login" onClick={() => setMenuOpen(false)} style={{
-            padding: '0.75rem 1rem',
-            fontSize: '1rem',
-            display: 'block',
-            color: 'var(--accent)',
-            fontWeight: 600,
-            textDecoration: 'none',
+          <Link to="/login" onClick={() => setMenuOpen(false)} className="btn btn-primary" style={{
+            margin: '0.75rem 1rem',
+            display: 'flex',
+            justifyContent: 'center',
           }}>
             Sign In
           </Link>

@@ -31,14 +31,13 @@ export default function PostCard({ post }) {
           <img
             src={post.imageUrl}
             alt={post.title}
+            className="post-card-image"
             style={{
               width: '100%',
               height: '100%',
               objectFit: 'cover',
               transition: 'transform 0.5s ease',
             }}
-            onMouseOver={e => e.currentTarget.style.transform = 'scale(1.06)'}
-            onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
             loading="lazy"
           />
           <div style={{
@@ -103,7 +102,6 @@ export default function PostCard({ post }) {
           color: 'var(--text-muted)',
         }}>
           <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-            <span style={{ opacity: 0.6 }}>✎</span>
             {post.author}
           </span>
           <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>

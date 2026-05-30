@@ -53,7 +53,7 @@ export default function ToastProvider({ children }) {
   return (
     <ToastContext.Provider value={{ addToast }}>
       {children}
-      <div style={{
+      <div className="toast-container" style={{
         position: 'fixed',
         top: 'calc(var(--nav-height) + 1rem)',
         right: '1.5rem',

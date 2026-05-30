@@ -119,8 +119,8 @@ export default function EditPost() {
     <div className="page-wrapper">
       <div className="container" style={{ maxWidth: '800px' }}>
         <div className="page-header" style={{ textAlign: 'left', marginBottom: '2rem' }}>
-          <h1 className="page-title" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>
-            ✎ Edit Article
+          <h1 className="page-title" style={{ marginBottom: '0.5rem' }}>
+            Edit Article
           </h1>
           <p className="page-subtitle" style={{ fontSize: '0.95rem' }}>
             Make your article even better.
@@ -152,7 +152,7 @@ export default function EditPost() {
             <label>Cover Image</label>
             <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
               <label className="btn btn-secondary" style={{ cursor: 'pointer', position: 'relative' }}>
-                {uploading ? 'Uploading...' : '📁 Upload File'}
+                {uploading ? 'Uploading...' : 'Upload File'}
                 <input
                   type="file"
                   accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml"
@@ -205,7 +205,7 @@ export default function EditPost() {
                 className="btn btn-ghost btn-sm"
                 style={{ fontSize: '0.78rem' }}
               >
-                {preview ? '✎ Edit' : '👁 Preview'}
+                {preview ? 'Edit' : 'Preview'}
               </button>
             </div>
             {preview ? (
@@ -233,18 +233,18 @@ export default function EditPost() {
             )}
           </div>
 
-          <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
+          <div className="edit-actions" style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
             <button
               type="submit"
               disabled={submitting}
-              className="btn btn-primary"
+              className="btn btn-primary btn-full-mobile"
             >
-              {submitting ? 'Saving...' : '💾 Save Changes'}
+              {submitting ? 'Saving...' : 'Save Changes'}
             </button>
             <button
               type="button"
               onClick={() => navigate(`/post/${id}`)}
-              className="btn btn-secondary"
+              className="btn btn-secondary btn-full-mobile"
             >
               Cancel
             </button>

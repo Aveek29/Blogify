@@ -58,7 +58,7 @@ export default function Home() {
 
   return (
     <div className="page-wrapper">
-      <div style={{
+      <div className="hero-section" style={{
         position: 'relative',
         padding: '3.5rem 0 3rem',
         marginBottom: '2rem',
@@ -91,17 +91,14 @@ export default function Home() {
                 borderColor: 'var(--border-color)',
               }}
             />
-            <span style={{
+            <svg style={{
               position: 'absolute',
               left: '1rem',
               top: '50%',
               transform: 'translateY(-50%)',
               color: 'var(--text-muted)',
-              fontSize: '1rem',
               pointerEvents: 'none',
-            }}>
-              🔍
-            </span>
+            }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           </div>
         </div>
       </div>
@@ -228,11 +225,7 @@ export default function Home() {
           </div>
         ) : (
           <>
-            <div className="post-grid" style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: '1.5rem',
-            }}>
+            <div className="post-grid">
               {posts.map((post, i) => (
                 <div key={post._id} className={`animate-fadeInUp stagger-${(i % 6) + 1}`}>
                   <PostCard post={post} />
@@ -241,7 +234,7 @@ export default function Home() {
             </div>
 
             {totalPages > 1 && (
-              <div style={{
+              <div className="pagination" style={{
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -251,7 +244,7 @@ export default function Home() {
                 <button
                   onClick={() => setPage(p => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="btn btn-secondary btn-sm"
+                  className="btn btn-secondary pagination-btn"
                 >
                   ← Previous
                 </button>
@@ -259,13 +252,14 @@ export default function Home() {
                   fontSize: '0.85rem',
                   color: 'var(--text-muted)',
                   fontWeight: 500,
+                  whiteSpace: 'nowrap',
                 }}>
                   Page {page} of {totalPages}
                 </span>
                 <button
                   onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
-                  className="btn btn-secondary btn-sm"
+                  className="btn btn-secondary pagination-btn"
                 >
                   Next →
                 </button>

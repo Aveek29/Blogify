@@ -103,7 +103,7 @@ export default function ChatWidget() {
       </button>
 
       {open && (
-        <div className="animate-slideUp" style={{
+        <div className="chat-widget-panel animate-slideUp" style={{
           position: 'fixed',
           bottom: '5rem',
           right: '1.5rem',
@@ -290,6 +290,18 @@ export default function ChatWidget() {
           </div>
         </div>
       )}
+
+      <style>{`
+        @media (max-width: 480px) {
+          .chat-widget-panel {
+            right: 0.75rem !important;
+            left: 0.75rem !important;
+            width: auto !important;
+            bottom: 4.5rem !important;
+            max-height: 60vh !important;
+          }
+        }
+      `}</style>
     </>
   );
 }

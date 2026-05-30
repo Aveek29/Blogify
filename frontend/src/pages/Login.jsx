@@ -73,9 +73,8 @@ export default function Login() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      minHeight: '100vh',
     }}>
-      <div className="animate-scaleIn" style={{ width: '100%', maxWidth: '440px' }}>
+      <div className="animate-scaleIn" style={{ width: '100%', maxWidth: '440px', padding: '0 1rem' }}>
         <div className="auth-card" style={{
           background: 'var(--bg-card)',
           borderRadius: 'var(--radius-xl)',
@@ -96,7 +95,13 @@ export default function Login() {
               fontSize: '1.5rem',
               color: 'hsl(var(--hsl-bg))',
             }}>
-              {isLogin ? '🔐' : '✎'}
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                {isLogin ? (
+                  <><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></>
+                ) : (
+                  <><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></>
+                )}
+              </svg>
             </div>
             <h1 style={{
               fontFamily: 'var(--font-primary)',
