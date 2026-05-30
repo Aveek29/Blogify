@@ -936,7 +936,6 @@ select.input-field {
 
   .auth-card {
     padding: 1.5rem !important;
-    margin: 0 1rem;
     border-radius: var(--radius-lg) !important;
   }
 
@@ -1024,7 +1023,6 @@ select.input-field {
 
   .auth-card {
     padding: 1.25rem !important;
-    margin: 0 0.5rem;
     border-radius: var(--radius-lg) !important;
   }
 
@@ -1060,7 +1058,6 @@ select.input-field {
 @media (max-width: 360px) {
   .auth-card {
     padding: 1rem !important;
-    margin: 0 0.25rem !important;
     border-radius: var(--radius-md) !important;
   }
 

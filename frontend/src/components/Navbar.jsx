@@ -144,8 +144,7 @@ export default function Navbar() {
       </div>
 
       <div className="mobile-menu" style={{
-        display: menuOpen ? 'flex' : 'none',
-        flexDirection: 'column',
+        display: menuOpen ? 'block' : 'none',
         position: 'fixed',
         top: 'var(--nav-height)',
         left: 0,
@@ -153,13 +152,16 @@ export default function Navbar() {
         bottom: 0,
         background: 'var(--bg-surface)',
         animation: 'slideDown 0.25s ease forwards',
-        overflow: 'hidden',
+        overflowY: 'auto',
+        WebkitOverflowScrolling: 'touch',
       }}>
-        <div style={{ flex: 1, overflowY: 'auto', padding: '1rem 1.5rem 2rem' }}>
+        <div style={{ padding: '1rem 1.5rem 3rem' }}>
           <Link to="/" onClick={() => setMenuOpen(false)} style={{
             padding: '0.85rem 1rem',
             fontSize: '1.05rem',
-            display: 'block',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.6rem',
             borderRadius: 'var(--radius-md)',
             background: isActive('/') ? 'hsla(var(--hsl-accent), 0.1)' : 'transparent',
             color: isActive('/') ? 'var(--accent)' : 'var(--text-primary)',
@@ -167,11 +169,11 @@ export default function Navbar() {
             fontWeight: isActive('/') ? 600 : 500,
             marginBottom: '0.25rem',
           }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '0.6rem', verticalAlign: 'middle' }}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             Home
           </Link>
 
-          <div style={{ margin: '0.75rem 1rem 0.5rem' }}>
+          <div style={{ margin: '1rem 1rem 0.5rem' }}>
             <p style={{ fontSize: '0.7rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--text-muted)' }}>Theme</p>
           </div>
           <div style={{
@@ -198,7 +200,25 @@ export default function Navbar() {
                   transition: 'var(--transition)',
                 }}
               >
-                <span style={{ fontSize: '1.1rem', lineHeight: 1 }}>{t.icon}</span>
+                <span style={{
+                  display: 'inline-block',
+                  width: '20px',
+                  height: '20px',
+                  borderRadius: '50%',
+                  background: t.id === 'dark-slate' ? '#1e293b' :
+                    t.id === 'midnight-navy' ? '#1a2744' :
+                    t.id === 'dark-emerald' ? '#1a332a' :
+                    t.id === 'dark-amethyst' ? '#2a1f33' :
+                    t.id === 'dark-ruby' ? '#331f24' :
+                    t.id === 'cyberpunk' ? '#0d0d1a' :
+                    t.id === 'light-clean' ? '#fafafa' :
+                    t.id === 'light-warm' ? '#f5efe6' :
+                    t.id === 'solarized' ? '#fdf6e3' :
+                    t.id === 'dracula' ? '#282a36' :
+                    t.id === 'nord' ? '#2e3440' :
+                    t.id === 'forest' ? '#1a2e1a' : 'var(--bg-card)',
+                  border: t.id.startsWith('light-') || t.id === 'solarized' ? '1px solid var(--border-color)' : 'none',
+                }} />
                 <span style={{
                   fontSize: '0.6rem',
                   fontWeight: 600,
@@ -269,6 +289,8 @@ export default function Navbar() {
               <Link to="/login" onClick={() => setMenuOpen(false)} className="btn btn-primary" style={{
                 display: 'flex',
                 justifyContent: 'center',
+                alignItems: 'center',
+                gap: '0.6rem',
                 width: '100%',
                 minHeight: '48px',
                 fontSize: '1rem',

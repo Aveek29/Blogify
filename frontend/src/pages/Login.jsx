@@ -69,12 +69,17 @@ export default function Login() {
   });
 
   return (
-    <div className="page-wrapper" style={{
+    <div style={{
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
+      minHeight: '100dvh',
+      paddingTop: 'var(--nav-height)',
+      paddingBottom: '2rem',
+      paddingLeft: '1rem',
+      paddingRight: '1rem',
     }}>
-      <div className="animate-scaleIn" style={{ width: '100%', maxWidth: '440px', padding: '0 1rem' }}>
+      <div className="animate-scaleIn" style={{ width: '100%', maxWidth: '440px' }}>
         <div className="auth-card" style={{
           background: 'var(--bg-card)',
           borderRadius: 'var(--radius-xl)',
