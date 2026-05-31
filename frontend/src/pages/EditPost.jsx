@@ -30,7 +30,8 @@ export default function EditPost() {
         return res.json();
       })
       .then(data => {
-        if (user && data.authorId !== user._id) {
+        const uid = user._id || user.id;
+        if (user && data.authorId !== uid) {
           addToast('You can only edit your own posts', 'error');
           navigate('/');
           return;

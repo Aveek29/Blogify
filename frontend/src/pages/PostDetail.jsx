@@ -59,7 +59,7 @@ export default function PostDetail() {
     );
   }
 
-  const isOwner = user && post.authorId === user._id;
+  const isOwner = user && (post.authorId === user._id || post.authorId === user.id);
   const dateStr = new Date(post.createdAt).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',

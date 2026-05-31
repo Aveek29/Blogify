@@ -13,8 +13,10 @@ export function AuthProvider({ children }) {
     const savedToken = localStorage.getItem('token');
     const savedUser = localStorage.getItem('user');
     if (savedToken && savedUser) {
+      const parsed = JSON.parse(savedUser);
+      if (parsed.id && !parsed._id) parsed._id = parsed.id;
       setToken(savedToken);
-      setUser(JSON.parse(savedUser));
+      setUser(parsed);
     }
     setLoading(false);
   }, []);
@@ -36,10 +38,12 @@ export function AuthProvider({ children }) {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.message);
+    const u = data.user;
+    if (u.id && !u._id) u._id = u.id;
     localStorage.setItem('token', data.token);
-    localStorage.setItem('user', JSON.stringify(data.user));
+    localStorage.setItem('user', JSON.stringify(u));
     setToken(data.token);
-    setUser(data.user);
+    setUser(u);
     return data;
   };
 
@@ -51,10 +55,12 @@ export function AuthProvider({ children }) {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.message);
+    const u = data.user;
+    if (u.id && !u._id) u._id = u.id;
     localStorage.setItem('token', data.token);
-    localStorage.setItem('user', JSON.stringify(data.user));
+    localStorage.setItem('user', JSON.stringify(u));
     setToken(data.token);
-    setUser(data.user);
+    setUser(u);
     return data;
   };
 
