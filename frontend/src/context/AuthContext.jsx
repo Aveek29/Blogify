@@ -21,6 +21,13 @@ export function AuthProvider({ children }) {
 
   const resolveUrl = (path) => path.startsWith('http') ? path : `${API_BASE}${path}`;
 
+  const resolveImageUrl = (path) => {
+    if (!path) return '';
+    if (path.startsWith('http')) return path;
+    const base = import.meta.env.VITE_API_URL || '';
+    return `${base}${path}`;
+  };
+
   const login = async (email, password) => {
     const res = await fetch(resolveUrl('/api/auth/login'), {
       method: 'POST',
@@ -77,7 +84,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout, authFetch }}>
+    <AuthContext.Provider value={{ user, token, loading, login, register, logout, authFetch, resolveImageUrl }}>
       {children}
     </AuthContext.Provider>
   );

@@ -18,7 +18,7 @@ export default function Dashboard() {
       .then(res => res.json())
       .then(data => {
         if (data.posts) {
-          const userPosts = data.posts.filter(p => p.authorId === user._id);
+          const userPosts = data.posts.filter(p => String(p.authorId) === String(user._id));
           setPosts(userPosts);
         }
         setLoading(false);

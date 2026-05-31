@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 
 const ALL_CATEGORIES = [
-  'AI', 'Algorithms', 'Android', 'Angular', 'Architecture',
+  'General', 'AI', 'Algorithms', 'Android', 'Angular', 'Architecture',
   'Assignment', 'AWS', 'Azure', 'Best Practices', 'Blockchain',
   'C#', 'C++', 'Career', 'CI/CD', 'CSS',
   'Dart', 'Data Science', 'Database', 'Deep Learning', 'Deno',

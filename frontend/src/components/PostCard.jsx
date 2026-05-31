@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export default function PostCard({ post }) {
+  const { resolveImageUrl } = useAuth();
   const dateStr = new Date(post.createdAt).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
@@ -29,7 +31,7 @@ export default function PostCard({ post }) {
           position: 'relative',
         }}>
           <img
-            src={post.imageUrl}
+            src={resolveImageUrl(post.imageUrl)}
             alt={post.title}
             className="post-card-image"
             style={{

@@ -8,7 +8,7 @@ import CategorySelect from '../components/CategorySelect';
 export default function EditPost() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, authFetch } = useAuth();
+  const { user, authFetch, resolveImageUrl } = useAuth();
   const { addToast } = useToast();
 
   const [form, setForm] = useState({
@@ -38,7 +38,7 @@ export default function EditPost() {
         setForm({
           title: data.title || '',
           content: data.content || '',
-          category: data.category || 'Technology',
+          category: data.category || 'General',
           imageUrl: data.imageUrl || '',
         });
         setLoading(false);
@@ -190,7 +190,7 @@ export default function EditPost() {
                 border: '1px solid var(--border-color)',
                 position: 'relative',
               }}>
-                <img src={form.imageUrl} alt="preview" style={{ width: '100%', height: '160px', objectFit: 'cover', display: 'block' }}
+                <img src={resolveImageUrl(form.imageUrl)} alt="preview" style={{ width: '100%', height: '160px', objectFit: 'cover', display: 'block' }}
                   onError={e => { e.target.style.display = 'none' }} />
               </div>
             )}

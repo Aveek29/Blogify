@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import { ALL_CATEGORIES } from '../components/CategorySelect';
 
 const POPULAR = [
-  'All', 'JavaScript', 'React', 'Python', 'CSS',
+  'All', 'General', 'JavaScript', 'React', 'Python', 'CSS',
   'TypeScript', 'Node.js', 'AI', 'DevOps', 'Tutorial',
   'Project', 'Career',
 ];

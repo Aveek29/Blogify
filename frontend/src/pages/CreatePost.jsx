@@ -5,14 +5,14 @@ import { useToast } from '../components/Toast';
 import CategorySelect from '../components/CategorySelect';
 
 export default function CreatePost() {
-  const { authFetch } = useAuth();
+  const { authFetch, resolveImageUrl } = useAuth();
   const { addToast } = useToast();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
     title: '',
     content: '',
-    category: 'Technology',
+    category: 'General',
     imageUrl: '',
   });
   const [submitting, setSubmitting] = useState(false);
@@ -159,7 +159,7 @@ export default function CreatePost() {
                 border: '1px solid var(--border-color)',
                 position: 'relative',
               }}>
-                <img src={form.imageUrl} alt="preview" style={{ width: '100%', height: '160px', objectFit: 'cover', display: 'block' }}
+                <img src={resolveImageUrl(form.imageUrl)} alt="preview" style={{ width: '100%', height: '160px', objectFit: 'cover', display: 'block' }}
                   onError={e => { e.target.style.display = 'none' }} />
               </div>
             )}

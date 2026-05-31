@@ -7,7 +7,7 @@ import Loader from '../components/Loader';
 export default function PostDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, authFetch } = useAuth();
+  const { user, authFetch, resolveImageUrl } = useAuth();
   const { addToast } = useToast();
 
   const [post, setPost] = useState(null);
@@ -78,7 +78,7 @@ export default function PostDetail() {
             boxShadow: 'var(--shadow-md)',
           }}>
             <img
-              src={post.imageUrl}
+              src={resolveImageUrl(post.imageUrl)}
               alt={post.title}
               style={{
                 width: '100%',

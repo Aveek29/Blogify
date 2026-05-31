@@ -46,8 +46,8 @@ router.post('/', auth, (req, res) => {
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });
     }
-    const url = `/uploads/${req.file.filename}`;
-    res.json({ url, filename: req.file.filename });
+    const fullUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+    res.json({ url: fullUrl, filename: req.file.filename });
   });
 });
 

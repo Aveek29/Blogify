@@ -24,7 +24,7 @@ const postSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Category is required'],
     enum: [
-      'AI', 'Algorithms', 'Android', 'Angular', 'Architecture',
+      'General', 'AI', 'Algorithms', 'Android', 'Angular', 'Architecture',
       'Assignment', 'AWS', 'Azure', 'Best Practices', 'Blockchain',
       'C#', 'C++', 'Career', 'CI/CD', 'CSS',
       'Dart', 'Data Science', 'Database', 'Deep Learning', 'Deno',

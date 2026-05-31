@@ -13,7 +13,7 @@ router.post(
     body('title').trim().notEmpty().withMessage('Title is required'),
     body('content').trim().notEmpty().withMessage('Content is required'),
     body('category').isIn([
-      'AI', 'Algorithms', 'Android', 'Angular', 'Architecture',
+      'General', 'AI', 'Algorithms', 'Android', 'Angular', 'Architecture',
       'Assignment', 'AWS', 'Azure', 'Best Practices', 'Blockchain',
       'C#', 'C++', 'Career', 'CI/CD', 'CSS',
       'Dart', 'Data Science', 'Database', 'Deep Learning', 'Deno',
