@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../components/Toast';
 import Loader from '../components/Loader';
@@ -7,15 +7,21 @@ import Loader from '../components/Loader';
 export default function Dashboard() {
   const { user, authFetch } = useAuth();
   const { addToast } = useToast();
+  const location = useLocation();
 
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [deleting, setDeleting] = useState(null);
 
-  useEffect(() => {
+  const fetchPosts = () => {
     setLoading(true);
+    setError(null);
     authFetch('/api/posts?limit=50')
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to load posts');
+        return res.json();
+      })
       .then(data => {
         if (data.posts) {
           const userPosts = data.posts.filter(p => String(p.authorId) === String(user._id));
@@ -23,8 +29,15 @@ export default function Dashboard() {
         }
         setLoading(false);
       })
-      .catch(() => setLoading(false));
-  }, [user, authFetch]);
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, [user, authFetch, location.pathname]);
 
   const handleDelete = async (postId) => {
     if (!window.confirm('Delete this article?')) return;
@@ -45,6 +58,14 @@ export default function Dashboard() {
   };
 
   if (loading) return <div className="page-wrapper"><Loader /></div>;
+  if (error) return (
+    <div className="page-wrapper animate-fadeIn">
+      <div className="container" style={{ maxWidth: '900px', textAlign: 'center', paddingTop: '4rem' }}>
+        <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', marginBottom: '1rem' }}>{error}</p>
+        <button onClick={fetchPosts} className="btn btn-primary">Try Again</button>
+      </div>
+    </div>
+  );
 
   const stats = [
     { label: 'Total Articles', value: posts.length },
@@ -71,10 +92,16 @@ export default function Dashboard() {
               Welcome back, {user?.username || 'User'}
             </p>
           </div>
-          <Link to="/create" className="btn btn-primary">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-            Write New
-          </Link>
+          <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+            <button onClick={fetchPosts} className="btn btn-secondary" style={{ fontSize: '0.85rem', padding: '0.5rem 1rem' }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+              Refresh
+            </button>
+            <Link to="/create" className="btn btn-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              Write New
+            </Link>
+          </div>
         </div>
 
         <div className="dashboard-stats" style={{
@@ -184,8 +211,9 @@ export default function Dashboard() {
                     onClick={() => handleDelete(post._id)}
                     disabled={deleting === post._id}
                     className="btn btn-danger btn-sm"
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}
                   >
-                    {deleting === post._id ? '...' : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>}
+                    {deleting === post._id ? '...' : <><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Delete</>}
                   </button>
                 </div>
               </div>
